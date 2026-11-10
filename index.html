@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabeena & Sharukh - enagagement Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 380px;
+            height: 740px;
+            background: #fdfbf7;
+            border-radius: 44px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+            overflow: hidden;
+            border: 10px solid #1c1c1c;
+        }
+
+        /* Invitation Page Content */
+        .invitation-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 35px 20px 60px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, #fdfbf7 0%, #f4efe6 100%);
+            z-index: 1;
+            scroll-behavior: smooth;
+        }
+
+        .invitation-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Top Header (Always visible instantly upon opening envelope) */
+        .header-block {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .header-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll Animation Blocks for Schedule & Location */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .top-art {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #7a6e65;
+            margin-bottom: 8px;
+        }
+
+        .main-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            color: #2b2621;
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 15px;
+        }
+
+        .main-names span {
+            font-size: 22px;
+            font-style: italic;
+            color: #b39b60;
+            display: block;
+            margin: 4px 0;
+        }
+
+        .section-box {
+            margin: 18px 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #e8e1d5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .section-box h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: #3a322b;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .section-box p {
+            font-size: 12px;
+            color: #615750;
+            line-height: 1.6;
+        }
+
+        .timeline-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .timeline-card {
+            background: #ffffff;
+            padding: 14px 10px;
+            border-radius: 8px;
+            flex: 1;
+            border: 1px solid #dfd7cc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .timeline-card h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #b39b60;
+            margin-bottom: 4px;
+        }
+
+        .timeline-card p {
+            font-size: 11px;
+            color: #554a42;
+            font-weight: 500;
+        }
+
+        .footer-note {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 16px;
+            color: #5c5047;
+            margin: 20px 0 30px;
+        }
+
+        /* Envelope Overlay Screen */
+        .envelope-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fdfbf7;
+            overflow: hidden;
+            z-index: 10;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .envelope-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.95;
+        }
+
+        .flap {
+            position: absolute;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
+        }
+
+        .flap-top {
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 190px solid transparent;
+            border-right: 190px solid transparent;
+            border-top: 220px solid #dcd2c2;
+            transform-origin: top;
+            z-index: 4;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+        }
+
+        .flap-bottom {
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 190px solid transparent;
+            border-right: 190px solid transparent;
+            border-bottom: 280px solid #cbbeaa;
+            transform-origin: bottom;
+            z-index: 3;
+        }
+
+        .flap-left {
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-top: 370px solid transparent;
+            border-bottom: 370px solid transparent;
+            border-left: 190px solid #d4c8b6;
+            transform-origin: left;
+            z-index: 2;
+        }
+
+        .flap-right {
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 370px solid transparent;
+            border-bottom: 370px solid transparent;
+            border-right: 190px solid #d4c8b6;
+            transform-origin: right;
+            z-index: 2;
+        }
+
+        .seal {
+            position: absolute;
+            top: 215px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 64px;
+            height: 64px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.9);
+            z-index: 5;
+            transition: transform 0.6s ease, opacity 0.4s ease;
+            border: 1px solid #dcd6cb;
+            pointer-events: auto;
+        }
+
+        .seal svg {
+            width: 34px;
+            height: 34px;
+            fill: #b39b60;
+        }
+
+        .envelope-screen.open {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-screen.open .flap-top {
+            transform: rotateX(180deg) scale(1.05);
+            opacity: 0;
+        }
+
+        .envelope-screen.open .flap-bottom {
+            transform: rotateX(-180deg) scale(1.05);
+            opacity: 0;
+        }
+
+        .envelope-screen.open .flap-left {
+            transform: rotateY(-90deg) scale(1.05);
+            opacity: 0;
+        }
+
+        .envelope-screen.open .flap-right {
+            transform: rotateY(90deg) scale(1.05);
+            opacity: 0;
+        }
+
+        .envelope-screen.open .seal {
+            transform: translateX(-50%) scale(0) rotate(45deg);
+            opacity: 0;
+        }
+
+        .tap-hint {
+            position: absolute;
+            bottom: 35px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #7a6e65;
+            animation: pulse 1.8s infinite;
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        
+        <!-- Main Invitation Content -->
+        <div class="invitation-content" id="scrollContainer">
+            
+            <!-- Header Block: Shows instantly when envelope opens -->
+            <div class="header-block" id="headerBlock">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" class="top-art" alt="Aesthetic couple art">
+                <p class="subtitle">enagagement Celebration</p>
+                <h1 class="main-names">
+                    Sabeena
+                    <span>&</span>
+                    Sharukh
+                </h1>
+                
+                <div class="section-box" style="margin-top: 15px;">
+                    <p class="subtitle">Save The Date</p>
+                    <p style="font-size: 15px; font-family: 'Cormorant Garamond', serif; font-weight: 600; color: #2b2621; margin-top: 4px;">21st November</p>
+                </div>
+            </div>
+
+            <!-- Scroll Reveal Block 1: Event Schedule -->
+            <div class="scroll-reveal">
+                <div class="section-box">
+                    <h3>Event Schedule</h3>
+                    <div class="timeline-row">
+                        <div class="timeline-card">
+                            <h4>11:00 AM</h4>
+                            <p>Event Starts</p>
+                        </div>
+                        <div class="timeline-card">
+                            <h4>1:00 PM</h4>
+                            <p>Lunch Feast</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Reveal Block 2: Venue Location -->
+            <div class="scroll-reveal">
+                <div class="section-box">
+                    <h3>Venue Location</h3>
+                    <p style="font-weight: 600; color: #2b2621; margin-bottom: 4px;">Our Residence</p>
+                    <p>Azad Nagar, 5th Line, Kurnool Road, Ongole</p>
+                </div>
+                <p class="footer-note">We eagerly await your gracious presence!</p>
+            </div>
+
+        </div>
+
+        <!-- Envelope Screen (Overlay) -->
+        <div class="envelope-screen" id="envelopeScreen" onclick="openEnvelope()">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" class="envelope-bg" alt="Theme background">
+            
+            <div class="flap flap-top"></div>
+            <div class="flap flap-left"></div>
+            <div class="flap flap-right"></div>
+            <div class="flap flap-bottom"></div>
+
+            <div class="seal">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+            <div class="tap-hint">Tap to open invitation</div>
+        </div>
+
+    </div>
+
+    <script>
+        function openEnvelope() {
+            const envelope = document.getElementById('envelopeScreen');
+            envelope.classList.add('open');
+
+            // Fade in the top header immediately when envelope opens
+            setTimeout(() => {
+                document.getElementById('headerBlock').classList.add('visible');
+            }, 300);
+        }
+
+        // Scroll observer for slow slide-up animation when user scrolls down to schedule/location
+        const container = document.getElementById('scrollContainer');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            root: container,
+            threshold: 0.2
+        });
+
+        document.querySelectorAll('.scroll-reveal').forEach(block => {
+            observer.observe(block);
+        });
+    </script>
+</body>
+</html>
+
